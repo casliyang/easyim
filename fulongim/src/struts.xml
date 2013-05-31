@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="false" />
+
+    <package name="default" namespace="/" extends="struts-default">
+        <action name="sendmsg" class="cn.fulong.im.action.SendMsgAction">
+            <result name="success">/jsp/sendok.jsp</result>
+        </action>       
+        <action name="receivemsg" class="cn.fulong.im.action.ReceiveMsgAction">
+            <result name="success">/jsp/receive.jsp</result>
+        </action>
+        
+        <!-- 客户在线状态处理，用于控制重复登录 -->
+        <action name="addClient" class="cn.fulong.im.action.ClientStatusAction" method="add">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        <action name="delClient" class="cn.fulong.im.action.ClientStatusAction" method="del">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        <action name="isClientOnline" class="cn.fulong.im.action.ClientStatusAction" method="isOnline">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        
+    </package>
+
+    <!-- Add packages here -->
+
+</struts>
