@@ -26,10 +26,10 @@
 </table>
 
 <script>
-var clientsList = new Array(); //创建访客数组，用于存储沟通中的所有访客id
+var clientsList = new Array(); //****活跃访客数组，用于存储沟通中的所有访客id****
 var focustab = "";   //用于标示当前聊天访客
 
-//查找某元素是否在数组中，如果在，返回下标，否则返回-1
+//工具：查找某元素是否在数组中，如果在，返回下标，否则返回-1
 function usual_search(array,key)
 {
 	var len=array.length;
@@ -59,6 +59,7 @@ if(urlreceiver != ""){
 }
 //设置sender，receiver，优先从url中取（结束）
 
+//工具：获取当前时间
 function getNow(){
  var myDate = new Date();
  var year = myDate.getFullYear();
@@ -68,7 +69,18 @@ function getNow(){
  return year + "-" + month + "-" + day + " " + time;
 }
 
-//长连接接受消息
+//工具：删除Array中指定下标的元素，下标从0开始
+Array.prototype.remove=function(dx){
+	if(isNaN(dx)||dx>this.length){return false;}
+	for(var i=0,n=0;i<this.length;i++){
+		if(this[i]!=this[dx]){
+			this[n++]=this[i]
+		}
+	}
+	this.length-=1;
+};
+
+//长连接监听是否有访客发消息给当前客服
 function listeningClients()
 {
   var req = null;
@@ -128,7 +140,8 @@ function listeningClients()
         	}
         	document.getElementById("chattd").appendChild(framenode);
         	
-
+        	//监听该访客什么时候下线，下线后删除tab和iframe
+        	delOfflineClients(tempclient);
         }
     }
     listeningClients();
@@ -139,9 +152,11 @@ function listeningClients()
  req.open("GET",url);             //打开连接
  req.send(null);          //发送请求
 }
-//加载页面就开始获取消息
+//加载页面就开始监听
 listeningClients();
 
+
+//用户点击访客tab页
 function gochat(thisid){
 	//将之前选中的tab设置为闲置状态（蓝色  #00FFFF），之前tab对应的iframe隐藏
 	document.getElementById(focustab).setAttribute("style", "background-color:#00FFFF;width:99px;height:20px");
@@ -152,6 +167,43 @@ function gochat(thisid){
 	document.getElementById(focustab).setAttribute("style", "background-color:yellow;width:99px;height:20px");
 	document.getElementById("chat_"+(focustab.split("_"))[1]).style.display = "block";
 }
+
+//移除已经下线的访客tab和对话iframe
+function delOfflineClients(paramclient){
+  var currenttime = getNow();
+  var req = null;
+  try{
+    req = new XMLHttpRequest();
+  }catch(error){
+    try{
+      req = new ActiveXObject("Microsoft.XMLHTTP");
+    }catch(error){return false;}
+  }
+  req.onreadystatechange = function ajaxExcute(){
+    if((req.readyState==4)&&(req.status==200))
+    {
+		//有返回值时说明当前访客已经下线了
+		//删掉访客tab和聊天iframe，从clientsList中去除当前下线的访客
+		var offtab = document.getElementById("tab_"+paramclient);
+		var offiframe = document.getElementById("chat_"+paramclient);
+		offtab.parentNode.removeChild(offtab); 
+		offiframe.parentNode.removeChild(offiframe); 
+		for ( var i = 0; i < clientsList.length; i++) {
+			if (clientsList[i] == paramclient) {
+				clientsList.remove(i);
+				break;
+			}
+		}
+		
+		//todo......................如果当前关掉的tab是focustab,则xxxxxxxxxxxxxxxxxxx
+		
+    }
+  };
+ var url = "fulongim/isOffline.action?client="+paramclient+"&sendTime="+currenttime;                 //发送请求的路径
+ req.open("GET",url);             //打开连接
+ req.send(null);          //发送请求
+}
+
 </script>
 
 </body>

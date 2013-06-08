@@ -1,12 +1,11 @@
 package cn.fulong.im.listener;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.springframework.context.ApplicationContext;
-
-import cn.fulong.im.tool.MyContextFactory;
 import cn.fulong.im.tool.OnlineClients;
 
 /**
@@ -24,9 +23,8 @@ public class OnlineClientsListener implements HttpSessionListener {
     	if (evt.getSession().getAttribute("clientID") != null) {
     		String client = (String)evt.getSession().getAttribute("clientID");
     		if (!client.equals("")) {
-    			ApplicationContext clientcontext = MyContextFactory.getContext();
-    			OnlineClients clientslist=(OnlineClients) clientcontext.getBean("clientsList");
-    			clientslist.delClient(client);
+    			CopyOnWriteArrayList<String> onlineClients = OnlineClients.getOnlineClients();
+    			onlineClients.remove(client);
 			}
 		}
     	

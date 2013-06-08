@@ -1,10 +1,8 @@
 package cn.fulong.im.action;
 
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.springframework.context.ApplicationContext;
-
-import cn.fulong.im.tool.MyContextFactory;
 import cn.fulong.im.tool.OnlineClients;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -55,7 +53,12 @@ public class OnlineClientsAction extends ActionSupport {
 		// TODO Auto-generated method stub	
 		if (!client.equals("")) {
 			//向OnlineClients添加在线访客
-			getClientList().addClient(client);
+			CopyOnWriteArrayList<String> onlineClients = OnlineClients.getOnlineClients();
+			//避免重复添加
+			if (!onlineClients.contains(client)) {
+				onlineClients.add(client);
+			}
+			
 			setIsonline("online");
 			
 			//将在线访客id设置到session中
@@ -76,7 +79,8 @@ public class OnlineClientsAction extends ActionSupport {
 	public String del() throws Exception {
 		// TODO Auto-generated method stub
 		if (!client.equals("")) {
-			getClientList().delClient(client);
+			CopyOnWriteArrayList<String> onlineClients = OnlineClients.getOnlineClients();
+			onlineClients.remove(client);
 			setIsonline("offline");
 		}
 		return "success";
@@ -85,16 +89,30 @@ public class OnlineClientsAction extends ActionSupport {
 	//访客是否在线
 	public String isOnline() throws Exception {
 		// TODO Auto-generated method stub
-		if (!client.equals("") && getClientList().isClientOnline(client)) {
-			setIsonline("online");
+		if (!client.equals("")) {
+			CopyOnWriteArrayList<String> onlineClients = OnlineClients.getOnlineClients();
+			if (onlineClients.contains(client)) {
+				setIsonline("online");
+			}else setIsonline("offline");
+			
 		}
 		return "success";
 	}
 	
-	//获取访客列表
-	private OnlineClients getClientList(){
-		ApplicationContext clientcontext = MyContextFactory.getContext();
-		OnlineClients clientslist=(OnlineClients) clientcontext.getBean("clientsList");
-		return clientslist;
+	//访客是否已下线
+	public String isOffline() throws Exception {
+		// TODO Auto-generated method stub
+		if (!client.equals("")) {
+			CopyOnWriteArrayList<String> onlineClients = OnlineClients.getOnlineClients();
+			while (true) {
+				if (!onlineClients.contains(client)) {
+					setIsonline("offline");
+					break;
+				}
+				Thread.sleep(5000);
+			}
+		}
+		return "success";
 	}
+	
 }

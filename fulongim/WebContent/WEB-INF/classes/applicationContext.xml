@@ -107,6 +107,4 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         <property name="messageListener" ref="topicMessageReceiver" />  
     </bean-->
     
-    <!-- 客户状态列表 -->
-    <bean id="clientsList" class="cn.fulong.im.tool.OnlineClients"/>
 </beans>

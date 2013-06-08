@@ -25,6 +25,9 @@
         <action name="isClientOnline" class="cn.fulong.im.action.OnlineClientsAction" method="isOnline">
             <result name="success">/jsp/isonline.jsp</result>
         </action>
+        <action name="isOffline" class="cn.fulong.im.action.OnlineClientsAction" method="isOffline">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
         
         <!-- 活跃访客，即向客服发送信息了的访客 -->
         <action name="getActiveClients" class="cn.fulong.im.action.GetActiveClientsAction">

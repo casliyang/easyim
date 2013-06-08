@@ -104,24 +104,30 @@ function addOnlineClient(){
 addOnlineClient();
 
 //访客显式退出（比如点击退出按钮）
-function logout(){
-  var currenttime = getNow();
-  var req = null;
-  try{
-    req = new XMLHttpRequest();
-  }catch(error){
-    try{
-      req = new ActiveXObject("Microsoft.XMLHTTP");
-    }catch(error){return false;}
-  }
-  req.onreadystatechange = function ajaxExcute(){
-    if((req.readyState==4)&&(req.status==200))
-    {
-    }
-  };
- var url = "fulongim/delClient.action?client="+sender+"&sendTime="+currenttime;                 //发送请求的路径
- req.open("GET",url);             //打开连接
- req.send(null);          //发送请求
+function logout(){ 
+ if (confirm("您确定要结束与客服的沟通？")){
+	  var currenttime = getNow();
+	  var req = null;
+	  try{
+	    req = new XMLHttpRequest();
+	  }catch(error){
+	    try{
+	      req = new ActiveXObject("Microsoft.XMLHTTP");
+	    }catch(error){return false;}
+	  }
+	  req.onreadystatechange = function ajaxExcute(){
+	    if((req.readyState==4)&&(req.status==200))
+	    {
+	    }
+	  };
+	 var url = "fulongim/delClient.action?client="+sender+"&sendTime="+currenttime;                 //发送请求的路径
+	 req.open("GET",url);             //打开连接
+	 req.send(null);          //发送请求
+	 
+	 window.opener=null;
+	 window.open('','_self');
+	 window.close();
+	}
 }
 
 
