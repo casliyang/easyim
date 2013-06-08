@@ -70,14 +70,30 @@ public class MessageReceiverImpl implements MessageListener, MessageReceiver {
 			//从而导致消息没被接收就已经被覆盖的情况
 			ConcurrentHashMap<String,String> messageList = MessageMap.getMessageMap();
 			String temprec = om.getStringProperty("receiver");
-			//如果消息中转列表中已包含一条key为当前接收者的消息
-			if (messageList.containsKey(temprec)) {
-				String tempmsg = messageList.get(temprec);
+			String tempsend = om.getStringProperty("sender");
+			//如果消息中转列表中已包含一条key为“当前发送者&接收者”的消息，则继续追加消息，新消息和旧消息用|分割
+			if (messageList.containsKey(tempsend+"&"+temprec)) {
+				String tempmsg = messageList.get(tempsend+"&"+temprec);
 				tempmsg += "|"+returnmsg;
-				messageList.remove(temprec);
-				messageList.put(temprec, tempmsg);
+				messageList.remove(tempsend+"&"+temprec);
+				messageList.put(tempsend+"&"+temprec, tempmsg);
 			}else{
-				messageList.put(temprec, returnmsg);
+				//队列中不包含key为“当前发送者&接收者”的消息，就直接新增一条
+				messageList.put(tempsend+"&"+temprec, returnmsg);
+			}
+			
+			//每收到一条消息，就判断活动访客列表中是否已经包含了当前发消息的访客
+			//活动访客列表结构为：【receiver，sender1|sender2|sender3|...】
+			ConcurrentHashMap<String,String> activeClients = ActiveClientsMap.getActiveClientsMap();
+			//如果活动访客中转列表中已包含一条key为“当前接受者”的消息，就追加当前信息的发送者到map的value中
+			if (activeClients.containsKey(temprec)) {
+				String tempclients = activeClients.get(temprec);
+				tempclients += "|"+tempsend;
+				activeClients.remove(temprec);
+				activeClients.put(temprec, tempclients);
+			}else{
+				//队列中不包含key为“当前发送者&接收者”的消息，就直接新增一条
+				activeClients.put(temprec, tempsend);
 			}
 			
 //			this.setRecmsg(returnmsg);

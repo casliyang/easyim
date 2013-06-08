@@ -82,7 +82,7 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 	</bean>
 	
 	<!-- 消息接收方 -->
-	<bean id="topicMessageReceiver" class="cn.fulong.im.tool.MessageReceiverImpl" scope="singleton">
+	<bean id="topicMessageReceiver" class="cn.fulong.im.tool.MessageReceiverImpl">
 	</bean>
 	
 	<!-- 主题消息监听容器 -->
@@ -107,5 +107,6 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         <property name="messageListener" ref="topicMessageReceiver" />  
     </bean-->
     
-    <bean id="clientsList" class="cn.fulong.im.tool.ClientsList"/>
+    <!-- 客户状态列表 -->
+    <bean id="clientsList" class="cn.fulong.im.tool.OnlineClients"/>
 </beans>

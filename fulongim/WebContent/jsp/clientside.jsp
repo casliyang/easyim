@@ -14,12 +14,24 @@
 <div id="chatarea"></div>
 <hr>
 输入框：<br>
-<textarea id="inputarea" rows="8" cols="160">
+<textarea id="inputarea" rows="8" cols="80">
 </textarea>
 <br>
 <button onclick="send()">发送</button>
+<br>
+<button onclick="logout()">退出</button>
 
 <script>
+//工具方法，用于获取当前时间
+function getNow(){
+ var myDate = new Date();
+ var year =myDate.getFullYear();
+ var month = myDate.getMonth() + 1;
+ var day = myDate.getDate();
+ var time = myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds();
+ return year + "-" + month + "-" + day + " " + time;
+}
+
 //设置sender，receiver，优先从url中取（开始）
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -41,7 +53,8 @@ if(urlsender != "" && urlreceiver != ""){
 }
 //设置sender，receiver，优先从url中取（结束）
 
-//唯一登录校验
+
+//唯一登录校验,************该方法暂不启用！****************
 var unique = true;
 function unique_login_check(){
   var req = null;
@@ -57,10 +70,56 @@ function unique_login_check(){
     {
     	var res = req.responseText;
     	alert(res);
+    	if(res == "online")
+    		alert("您已在别处登录!!");
 		//to do .............
     }
   };
- var url = "fulongim/isClientOnline.action?client="+sender;                 //发送请求的路径
+ var url = "fulongim/isClientOnline.action?client="+sender+"&sendTime="+currenttime;                 //发送请求的路径
+ req.open("GET",url);             //打开连接
+ req.send(null);          //发送请求
+}
+
+
+//设置在线访客
+function addOnlineClient(){
+  var currenttime = getNow();
+  var req = null;
+  try{
+    req = new XMLHttpRequest();
+  }catch(error){
+    try{
+      req = new ActiveXObject("Microsoft.XMLHTTP");
+    }catch(error){return false;}
+  }
+  req.onreadystatechange = function ajaxExcute(){
+    if((req.readyState==4)&&(req.status==200))
+    {
+    }
+  };
+ var url = "fulongim/addClient.action?client="+sender+"&sendTime="+currenttime;                 //发送请求的路径
+ req.open("GET",url);             //打开连接
+ req.send(null);          //发送请求
+}
+addOnlineClient();
+
+//访客显式退出（比如点击退出按钮）
+function logout(){
+  var currenttime = getNow();
+  var req = null;
+  try{
+    req = new XMLHttpRequest();
+  }catch(error){
+    try{
+      req = new ActiveXObject("Microsoft.XMLHTTP");
+    }catch(error){return false;}
+  }
+  req.onreadystatechange = function ajaxExcute(){
+    if((req.readyState==4)&&(req.status==200))
+    {
+    }
+  };
+ var url = "fulongim/delClient.action?client="+sender+"&sendTime="+currenttime;                 //发送请求的路径
  req.open("GET",url);             //打开连接
  req.send(null);          //发送请求
 }
@@ -89,15 +148,6 @@ function send(){
  var url = "fulongim/sendmsg.action?mm.sender="+sender+"&mm.receiver="+receiver+"&mm.content="+msg+"&mm.sendTime="+currenttime;                 //发送请求的路径
  req.open("GET",url);             //打开连接
  req.send(null);          //发送请求
-}
-
-function getNow(){
- var myDate = new Date();
- var year =myDate.getFullYear();
- var month = myDate.getMonth() + 1;
- var day = myDate.getDate();
- var time = myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds();
- return year + "-" + month + "-" + day + " " + time;
 }
 
 //长连接接受消息
@@ -131,7 +181,7 @@ function fetchmsg()
     }
   };
  var timestamp=new Date().getTime();
- var url = "fulongim/receivemsg.action?receiver="+sender+"&timestamp="+timestamp;                 //发送请求的路径
+ var url = "fulongim/receivemsg.action?sender="+receiver+"&receiver="+sender+"&timestamp="+timestamp;                 //发送请求的路径
  req.open("GET",url);             //打开连接
  req.send(null);          //发送请求
 }

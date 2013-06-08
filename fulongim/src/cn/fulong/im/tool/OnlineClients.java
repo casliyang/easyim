@@ -1,17 +1,15 @@
 package cn.fulong.im.tool;
 	
 import java.util.concurrent.CopyOnWriteArrayList;
+/**
+ * 用于保存所有在线的访客
+ * 注意“在线访客”与“活跃访客”不同，“活跃访客”指的是发起沟通的访客
+ * @author liyang
+ *
+ */
+public class OnlineClients {
 	
-public class ClientsList {
-	
-	private static CopyOnWriteArrayList<String> clients = null;
-	
-	public CopyOnWriteArrayList<String> getClients() {
-		if (clients == null) {
-			clients = new CopyOnWriteArrayList<String>();
-		}
-		return clients;
-	}
+	private static CopyOnWriteArrayList<String> clients = new CopyOnWriteArrayList<String>();
 	
 	public void addClient(String clientName){
 		if (!clientName.equals("") && !clients.contains(clientName)) {

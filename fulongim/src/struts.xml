@@ -15,15 +15,20 @@
             <result name="success">/jsp/receive.jsp</result>
         </action>
         
-        <!-- 客户在线状态处理，用于控制重复登录 -->
-        <action name="addClient" class="cn.fulong.im.action.ClientStatusAction" method="add">
+        <!-- 在线访客 -->
+        <action name="addClient" class="cn.fulong.im.action.OnlineClientsAction" method="add">
             <result name="success">/jsp/isonline.jsp</result>
         </action>
-        <action name="delClient" class="cn.fulong.im.action.ClientStatusAction" method="del">
+        <action name="delClient" class="cn.fulong.im.action.OnlineClientsAction" method="del">
             <result name="success">/jsp/isonline.jsp</result>
         </action>
-        <action name="isClientOnline" class="cn.fulong.im.action.ClientStatusAction" method="isOnline">
+        <action name="isClientOnline" class="cn.fulong.im.action.OnlineClientsAction" method="isOnline">
             <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        
+        <!-- 活跃访客，即向客服发送信息了的访客 -->
+        <action name="getActiveClients" class="cn.fulong.im.action.GetActiveClientsAction">
+            <result name="success">/jsp/activeClients.jsp</result>
         </action>
         
     </package>

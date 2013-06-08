@@ -9,7 +9,14 @@ import com.opensymphony.xwork2.ActionSupport;
 public class ReceiveMsgAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	String returnmsg;
+	String sender;
 	String receiver;
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
 	public String getReceiver() {
 		return receiver;
 	}
@@ -28,10 +35,13 @@ public class ReceiveMsgAction extends ActionSupport {
 		// TODO Auto-generated method stub
 		ConcurrentHashMap<String,String> messageList = MessageMap.getMessageMap();
 		while (true) {
-			if (messageList.containsKey(receiver)) {
-				returnmsg = messageList.get(receiver);
-				messageList.remove(receiver);
+			if (messageList.containsKey(sender+"&"+receiver)) {
+				returnmsg = messageList.get(sender+"&"+receiver);
+				messageList.remove(sender+"&"+receiver);
 				break;
+				
+				
+				//ÅÐ¶Ïsession¶Ï¿ª
 				}
 			Thread.sleep(1000);
 		}
