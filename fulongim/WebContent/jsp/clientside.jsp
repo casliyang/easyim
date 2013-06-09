@@ -19,7 +19,7 @@
 <br>
 <button onclick="send()">发送</button>
 <br>
-<button onclick="logout()">退出</button>
+<button onclick="logoutClient()">退出</button>
 
 <script>
 //工具方法，用于获取当前时间
@@ -104,7 +104,7 @@ function addOnlineClient(){
 addOnlineClient();
 
 //访客显式退出（比如点击退出按钮）
-function logout(){ 
+function logoutClient(){ 
  if (confirm("您确定要结束与客服的沟通？")){
 	  var currenttime = getNow();
 	  var req = null;

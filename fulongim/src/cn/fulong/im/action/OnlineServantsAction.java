@@ -3,7 +3,7 @@ package cn.fulong.im.action;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.fulong.im.tool.OnlineClientsMap;
+import cn.fulong.im.tool.OnlineServantsMap;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -15,13 +15,21 @@ import com.opensymphony.xwork2.ActionSupport;
  * 2.删除访客（当用户显式关闭对话框时使用，否则靠sessionlistener监听session的销毁）
  * 3.获取访客在线状态
  */
-public class OnlineClientsAction extends ActionSupport {
+public class OnlineServantsAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 1L;
 	
-	String client = "";
+	String servant = "";
 	String isonline = "offline";
 	String informations = "";
+	
+	public String getServant() {
+		return servant;
+	}
+
+	public void setServant(String servant) {
+		this.servant = servant;
+	}
 	
 	public String getInformations() {
 		return informations;
@@ -39,13 +47,7 @@ public class OnlineClientsAction extends ActionSupport {
 		this.isonline = isonline;
 	}
 	
-	public String getClient() {
-		return client;
-	}
-	
-	public void setClient(String client) {
-		this.client = client;
-	}
+
 	
 	@Override
 	public String execute() throws Exception {
@@ -54,18 +56,18 @@ public class OnlineClientsAction extends ActionSupport {
 	}
 	
 	/**
-	 * 接收Ajax请求，向OnlineClientsMap添加在线访客，并将在线访客id设置到session中
+	 * 接收Ajax请求，向OnlineServantsMap添加在线客服，并将在线客服id设置到session中
 	 * @return
 	 * @throws Exception
 	 */
 	public String add() throws Exception {
 		// TODO Auto-generated method stub	
-		if (!client.equals("")) {
+		if (!servant.equals("")) {
 			//向OnlineClients添加在线访客
-			ConcurrentHashMap<String,String> onlineClients = OnlineClientsMap.getOnlineClients();
+			ConcurrentHashMap<String,String> onlineServants = OnlineServantsMap.getOnlineServants();
 			//避免重复添加
-			if (!onlineClients.contains(client)) {
-				onlineClients.put(client, informations);
+			if (!onlineServants.contains(servant)) {
+				onlineServants.put(servant, informations);
 			}
 			
 			setIsonline("online");
@@ -73,7 +75,7 @@ public class OnlineClientsAction extends ActionSupport {
 			//将在线访客id设置到session中
 			ActionContext actionContext = ActionContext.getContext();
 	        Map<String,Object> session = actionContext.getSession();
-	        session.put("clientID",client);
+	        session.put("servantID",servant);
 		}
 		return "success";
 	}
@@ -81,26 +83,26 @@ public class OnlineClientsAction extends ActionSupport {
 	/**
 	 * 当用户显式关闭对话框时使用。
 	 * 否则靠HttpSessionListener监听session的销毁
-	 * HttpSessionListener一旦监听到session销毁，就到OnlineClientsMap去删除访客
+	 * HttpSessionListener一旦监听到session销毁，就到OnlineServantsMap去删除访客
 	 * @return
 	 * @throws Exception
 	 */
 	public String del() throws Exception {
 		// TODO Auto-generated method stub
-		if (!client.equals("")) {
-			ConcurrentHashMap<String,String> onlineClients = OnlineClientsMap.getOnlineClients();
-			onlineClients.remove(client);
+		if (!servant.equals("")) {
+			ConcurrentHashMap<String,String> onlineServants = OnlineServantsMap.getOnlineServants();
+			onlineServants.remove(servant);
 			setIsonline("offline");
 		}
 		return "success";
 	}
 	
-	//访客是否在线
+	//客服是否在线
 	public String isOnline() throws Exception {
 		// TODO Auto-generated method stub
-		if (!client.equals("")) {
-			ConcurrentHashMap<String,String> onlineClients = OnlineClientsMap.getOnlineClients();
-			if (onlineClients.containsKey(client)) {
+		if (!servant.equals("")) {
+			ConcurrentHashMap<String,String> onlineServants = OnlineServantsMap.getOnlineServants();
+			if (onlineServants.containsKey(servant)) {
 				setIsonline("online");
 			}else setIsonline("offline");
 			
@@ -112,10 +114,10 @@ public class OnlineClientsAction extends ActionSupport {
 	//长连接，慎用
 	public String isOffline() throws Exception {
 		// TODO Auto-generated method stub
-		if (!client.equals("")) {
-			ConcurrentHashMap<String,String> onlineClients = OnlineClientsMap.getOnlineClients();
+		if (!servant.equals("")) {
+			ConcurrentHashMap<String,String> onlineServants = OnlineServantsMap.getOnlineServants();
 			while (true) {
-				if (!onlineClients.containsKey(client)) {
+				if (!onlineServants.containsKey(servant)) {
 					setIsonline("offline");
 					break;
 				}

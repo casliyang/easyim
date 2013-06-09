@@ -17,7 +17,8 @@
 	2.3 iframe请求一个客服对话页面，带上参数sender和receiver
 3.当客服点击访客标签时，显示对应的隐藏iframe，其余iframe隐藏
 -->
-
+<button onclick="logoutServant()">退出</button>
+<br/>
 <table width="100%" height="100%">
 <tr>
 <td id="tabtd" width="100px"></td>
@@ -195,15 +196,66 @@ function delOfflineClients(paramclient){
 			}
 		}
 		
-		//todo......................如果当前关掉的tab是focustab,则xxxxxxxxxxxxxxxxxxx
-		
+		//如果当前关掉的tab是focustab,则clientsList[0]选中clientsList中的第一个tab
+		if ((focustab.split("_"))[1] == paramclient) {
+			focustab = "tab_"+clientsList[0];
+			gochat("tab_"+clientsList[0]);
+		}
     }
   };
- var url = "fulongim/isOffline.action?client="+paramclient+"&sendTime="+currenttime;                 //发送请求的路径
+ var url = "fulongim/isClientOffline.action?client="+paramclient+"&sendTime="+currenttime;                 //发送请求的路径
  req.open("GET",url);             //打开连接
  req.send(null);          //发送请求
 }
 
+//设置客服上线
+function addOnlineServant(){
+  var currenttime = getNow();
+  var req = null;
+  try{
+    req = new XMLHttpRequest();
+  }catch(error){
+    try{
+      req = new ActiveXObject("Microsoft.XMLHTTP");
+    }catch(error){return false;}
+  }
+  req.onreadystatechange = function ajaxExcute(){
+    if((req.readyState==4)&&(req.status==200))
+    {
+    }
+  };
+ var url = "fulongim/addServant.action?servant="+receiver+"&sendTime="+currenttime;                 //发送请求的路径
+ req.open("GET",url);             //打开连接
+ req.send(null);          //发送请求
+}
+addOnlineServant();
+
+//客服显式退出（比如点击退出按钮）
+function logoutServant(){ 
+ if (confirm("您确定要退出当前页面？")){
+	  var currenttime = getNow();
+	  var req = null;
+	  try{
+	    req = new XMLHttpRequest();
+	  }catch(error){
+	    try{
+	      req = new ActiveXObject("Microsoft.XMLHTTP");
+	    }catch(error){return false;}
+	  }
+	  req.onreadystatechange = function ajaxExcute(){
+	    if((req.readyState==4)&&(req.status==200))
+	    {
+	    }
+	  };
+	 var url = "fulongim/delServant.action?servant="+receiver+"&sendTime="+currenttime;                 //发送请求的路径
+	 req.open("GET",url);             //打开连接
+	 req.send(null);          //发送请求
+	 
+	 window.opener=null;
+	 window.open('','_self');
+	 window.close();
+	}
+}
 </script>
 
 </body>

@@ -25,7 +25,7 @@
         <action name="isClientOnline" class="cn.fulong.im.action.OnlineClientsAction" method="isOnline">
             <result name="success">/jsp/isonline.jsp</result>
         </action>
-        <action name="isOffline" class="cn.fulong.im.action.OnlineClientsAction" method="isOffline">
+        <action name="isClientOffline" class="cn.fulong.im.action.OnlineClientsAction" method="isOffline">
             <result name="success">/jsp/isonline.jsp</result>
         </action>
         
@@ -34,6 +34,19 @@
             <result name="success">/jsp/activeClients.jsp</result>
         </action>
         
+        <!-- 在线客服 -->
+        <action name="addServant" class="cn.fulong.im.action.OnlineServantsAction" method="add">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        <action name="delServant" class="cn.fulong.im.action.OnlineServantsAction" method="del">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        <action name="isServantOnline" class="cn.fulong.im.action.OnlineServantsAction" method="isOnline">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
+        <action name="isServantOffline" class="cn.fulong.im.action.OnlineServantsAction" method="isOffline">
+            <result name="success">/jsp/isonline.jsp</result>
+        </action>
     </package>
 
     <!-- Add packages here -->

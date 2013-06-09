@@ -1,12 +1,13 @@
 package cn.fulong.im.listener;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import cn.fulong.im.tool.OnlineClients;
+import cn.fulong.im.tool.OnlineClientsMap;
+import cn.fulong.im.tool.OnlineServantsMap;
 
 /**
  * Application Lifecycle Listener implementation class OnlineClientsListener
@@ -19,12 +20,21 @@ public class OnlineClientsListener implements HttpSessionListener {
      * 当session过期时，OnlineClients中删除当前session相关的访客
      */
     public void sessionDestroyed(HttpSessionEvent evt) {
-        // TODO Auto-generated method stub
+        //设置访客退出
     	if (evt.getSession().getAttribute("clientID") != null) {
     		String client = (String)evt.getSession().getAttribute("clientID");
     		if (!client.equals("")) {
-    			CopyOnWriteArrayList<String> onlineClients = OnlineClients.getOnlineClients();
+    			ConcurrentHashMap<String,String> onlineClients = OnlineClientsMap.getOnlineClients();
     			onlineClients.remove(client);
+			}
+		}
+		
+		//设置客服退出
+    	if (evt.getSession().getAttribute("servantID") != null) {
+    		String servant = (String)evt.getSession().getAttribute("servantID");
+    		if (!servant.equals("")) {
+    			ConcurrentHashMap<String,String> onlineServants = OnlineServantsMap.getOnlineServants();
+    			onlineServants.remove(servant);
 			}
 		}
     	
