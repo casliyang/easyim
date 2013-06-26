@@ -1,5 +1,6 @@
 package cn.fulong.im.action;
 
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +23,17 @@ public class OnlineServantsAction extends ActionSupport {
 	String servant = "";
 	String isonline = "offline";
 	String informations = "";
+	String onlineServantsStr = "";
 	
+
+	public String getOnlineServantsStr() {
+		return onlineServantsStr;
+	}
+
+	public void setOnlineServantsStr(String onlineServantsStr) {
+		this.onlineServantsStr = onlineServantsStr;
+	}
+
 	public String getServant() {
 		return servant;
 	}
@@ -105,6 +116,18 @@ public class OnlineServantsAction extends ActionSupport {
 			if (onlineServants.containsKey(servant)) {
 				setIsonline("online");
 			}else setIsonline("offline");
+			
+		}
+		return "success";
+	}
+	
+	//获取所有的在线客服id
+	public String getAll() throws Exception {
+		// TODO Auto-generated method stub
+		ConcurrentHashMap<String,String> onlineServants = OnlineServantsMap.getOnlineServants();
+		Enumeration<String> servants = onlineServants.keys();
+		while (servants.hasMoreElements()) {
+			onlineServantsStr += servants.nextElement() + "|";
 			
 		}
 		return "success";

@@ -47,6 +47,9 @@
         <action name="isServantOffline" class="cn.fulong.im.action.OnlineServantsAction" method="isOffline">
             <result name="success">/jsp/isonline.jsp</result>
         </action>
+        <action name="getAllOnlineServants" class="cn.fulong.im.action.OnlineServantsAction" method="getAll">
+            <result name="success">/jsp/onlineServants.jsp</result>
+        </action>
     </package>
 
     <!-- Add packages here -->
